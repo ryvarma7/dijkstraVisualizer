@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dijkstra's Algorithm Visualizer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Dijkstra's Algorithm Visualizer</h1>
+
+    <div class="grid">
+      <!-- Graph Builder -->
+      <div class="panel">
+        <h2>Build Your Graph</h2>
+
+        <!-- Add Nodes -->
+        <div class="section">
+          <h3>Add Nodes</h3>
+          <div class="row">
+            <input type="text" id="nodeName" placeholder="Node name">
+            <button id="addNodeBtn">+</button>
+          </div>
+          <div id="nodesList" class="chips"></div>
+        </div>
+
+        <!-- Add Edges -->
+        <div class="section">
+          <h3>Add Edges</h3>
+          <div class="row">
+            <select id="fromNode">
+              <option value="">From</option>
+            </select>
+            <select id="toNode">
+              <option value="">To</option>
+            </select>
+            <input type="number" id="weight" placeholder="Weight">
+          </div>
+          <button id="addEdgeBtn">Add Edge</button>
+        </div>
+
+        <!-- Start Node -->
+        <div class="section">
+          <h3>Start Node</h3>
+          <select id="startNode">
+            <option value="">Select start node</option>
+          </select>
+        </div>
+
+        <!-- Controls -->
+        <div class="section">
+          <button id="startBtn">▶ Start Algorithm</button>
+          <button id="nextStepBtn" disabled>Next Step</button>
+          <button id="resetBtn">⟳ Reset</button>
+          <button id="clearBtn">🗑 Clear All</button>
+        </div>
+      </div>
+
+      <!-- Graph Visualization -->
+      <div class="panel">
+        <h2>Graph Visualization</h2>
+        <svg id="graphCanvas" width="400" height="400"></svg>
+        <div class="legend">
+          <span><span class="dot unvisited"></span> Unvisited</span>
+          <span><span class="dot current"></span> Current</span>
+          <span><span class="dot visited"></span> Visited</span>
+        </div>
+      </div>
+
+      <!-- Algorithm Info -->
+      <div class="panel">
+        <h2>Algorithm Info</h2>
+        <div id="flowSteps"></div>
+        <div id="currentStep" class="info-box"></div>
+        <div id="priorityQueueBox" class="info-box"></div>
+        <div id="finalResults" class="info-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
