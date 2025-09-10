@@ -1,394 +1,525 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);
-    min-height: 100vh;
-    color: #ffffff;
-    overflow-x: auto;
-}
-
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.main-title {
-    font-size: 3rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 2rem;
-    background: linear-gradient(45deg, #8b5cf6, #06b6d4, #10b981);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradient 3s ease infinite;
-    text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-}
-
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 1.5rem;
-    align-items: start;
-}
-
-.panel {
-    background: rgba(15, 15, 35, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-}
-
-.panel:hover {
-    border-color: rgba(139, 92, 246, 0.4);
-    box-shadow: 
-        0 12px 40px rgba(0, 0, 0, 0.4),
-        0 0 20px rgba(139, 92, 246, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
-.panel-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: #8b5cf6;
-    text-align: center;
-}
-
-.section {
-    margin-bottom: 1.5rem;
-}
-
-.section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: #e2e8f0;
-}
-
-.section-title.small {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-.input-group {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.input-field, .select-field {
-    flex: 1;
-    padding: 0.75rem;
-    background: rgba(30, 30, 60, 0.6);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: 8px;
-    color: #ffffff;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.input-field:focus, .select-field:focus {
-    outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-    background: rgba(30, 30, 60, 0.8);
-}
-
-.input-field::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.select-field option {
-    background: #1a1a2e;
-    color: #ffffff;
-}
-
-.edge-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.btn {
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-}
-
-.btn-success {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    width: 100%;
-}
-
-.btn-success:hover {
-    background: linear-gradient(135deg, #059669, #047857);
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-}
-
-.btn-purple {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    color: white;
-    width: 100%;
-}
-
-.btn-purple:hover {
-    background: linear-gradient(135deg, #7c3aed, #6d28d9);
-    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #64748b, #475569);
-    color: white;
-    width: 100%;
-}
-
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #475569, #334155);
-    box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4);
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-    width: 100%;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
-    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-.controls {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.nodes-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.node-tag {
-    padding: 0.25rem 0.75rem;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
-    color: white;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.visualization-panel {
-    min-height: 500px;
-}
-
-.svg-container {
-    background: rgba(30, 30, 60, 0.3);
-    border-radius: 12px;
-    padding: 1rem;
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    margin-bottom: 1rem;
-}
-
-.legend {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    text-align: center;
-}
-
-.legend-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.legend-color {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.legend-color.unvisited {
-    background: #6366f1;
-}
-
-.legend-color.current {
-    background: #f59e0b;
-}
-
-.legend-color.visited {
-    background: #10b981;
-}
-
-.legend span {
-    font-size: 0.8rem;
-    color: #e2e8f0;
-}
-
-.flow-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.flow-step {
-    padding: 0.5rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.flow-step.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-    border-color: rgba(16, 185, 129, 0.4);
-    color: #10b981;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-}
-
-.flow-step:not(.active) {
-    background: rgba(100, 116, 139, 0.2);
-    color: #94a3b8;
-}
-
-.calculation-details, .current-step-info, .priority-queue, .final-results {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border-radius: 8px;
-    border: 1px solid;
-}
-
-.calculation-details {
-    background: rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.3);
-}
-
-.current-step-info {
-    background: rgba(16, 185, 129, 0.1);
-    border-color: rgba(16, 185, 129, 0.3);
-}
-
-.priority-queue {
-    background: rgba(245, 158, 11, 0.1);
-    border-color: rgba(245, 158, 11, 0.3);
-}
-
-.final-results {
-    background: rgba(139, 92, 246, 0.1);
-    border-color: rgba(139, 92, 246, 0.3);
-}
-
-.calculation-content, .priority-queue-content, .final-results-content {
-    font-size: 0.75rem;
-    line-height: 1.4;
-}
-
-.queue-item, .result-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    margin: 0.25rem 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    font-family: monospace;
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+class DijkstraVisualizer {
+    constructor() {
+        this.nodes = [];
+        this.edges = [];
+        this.distances = {};
+        this.currentNode = null;
+        this.visitedNodes = new Set();
+        this.running = false;
+        this.step = 0;
+        this.algorithm = [];
+        this.priorityQueue = [];
+        this.currentStep = "";
+        
+        this.flowSteps = [
+            { id: 1, text: "Initialize all distances to ∞" },
+            { id: 2, text: "Set source distance to 0" },
+            { id: 3, text: "Add source to priority queue" },
+            { id: 4, text: "While queue is not empty:" },
+            { id: 5, text: "Extract node with min distance" },
+            { id: 6, text: "Mark node as visited" },
+            { id: 7, text: "Update neighbors' distances" },
+            { id: 8, text: "Add unvisited neighbors to queue" },
+            { id: 9, text: "Algorithm complete!" }
+        ];
+        
+        this.activeFlowSteps = new Set();
+        this.init();
     }
     
-    .main-title {
-        font-size: 2.5rem;
+    init() {
+        this.bindEvents();
+        this.renderFlowSteps();
+    }
+    
+    bindEvents() {
+        // Node input
+        document.getElementById('nodeInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') this.addNode();
+        });
+        document.getElementById('addNodeBtn').addEventListener('click', () => this.addNode());
+        
+        // Edge input
+        document.getElementById('addEdgeBtn').addEventListener('click', () => this.addEdge());
+        
+        // Controls
+        document.getElementById('startBtn').addEventListener('click', () => this.startVisualization());
+        document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
+        document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+        document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
+    }
+    
+    addNode() {
+        const input = document.getElementById('nodeInput');
+        const nodeName = input.value.trim();
+        
+        if (nodeName && !this.nodes.includes(nodeName)) {
+            this.nodes.push(nodeName);
+            input.value = '';
+            this.updateNodeSelects();
+            this.renderNodes();
+            this.renderGraph();
+        }
+    }
+    
+    addEdge() {
+        const fromNode = document.getElementById('fromNode').value;
+        const toNode = document.getElementById('toNode').value;
+        const weight = document.getElementById('weightInput').value;
+        
+        if (fromNode && toNode && weight && !isNaN(weight)) {
+            const newEdge = { from: fromNode, to: toNode, weight: parseInt(weight) };
+            this.edges.push(newEdge);
+            
+            // Clear inputs
+            document.getElementById('fromNode').value = '';
+            document.getElementById('toNode').value = '';
+            document.getElementById('weightInput').value = '';
+            
+            this.renderGraph();
+        }
+    }
+    
+    updateNodeSelects() {
+        const selects = ['fromNode', 'toNode', 'startNode'];
+        selects.forEach(selectId => {
+            const select = document.getElementById(selectId);
+            const currentValue = select.value;
+            
+            // Clear existing options except the first one
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            // Add node options
+            this.nodes.forEach(node => {
+                const option = document.createElement('option');
+                option.value = node;
+                option.textContent = node;
+                select.appendChild(option);
+            });
+            
+            // Restore previous value if it still exists
+            if (this.nodes.includes(currentValue)) {
+                select.value = currentValue;
+            }
+        });
+    }
+    
+    renderNodes() {
+        const nodesList = document.getElementById('nodesList');
+        nodesList.innerHTML = '';
+        
+        this.nodes.forEach(node => {
+            const nodeTag = document.createElement('span');
+            nodeTag.className = 'node-tag';
+            nodeTag.textContent = node;
+            nodesList.appendChild(nodeTag);
+        });
+    }
+    
+    generateNodePositions() {
+        const positions = {};
+        const centerX = 200;
+        const centerY = 200;
+        const radius = 120;
+        
+        this.nodes.forEach((node, index) => {
+            const angle = (2 * Math.PI * index) / this.nodes.length;
+            positions[node] = {
+                x: centerX + radius * Math.cos(angle),
+                y: centerY + radius * Math.sin(angle)
+            };
+        });
+        
+        return positions;
+    }
+    
+    getNodeColor(node) {
+        if (this.visitedNodes.has(node)) return "#10b981";
+        if (this.currentNode === node) return "#f59e0b";
+        return "#6366f1";
+    }
+    
+    getEdgeColor(from, to) {
+        if (this.visitedNodes.has(from) && this.visitedNodes.has(to)) return "#10b981";
+        if (this.currentNode === from || this.currentNode === to) return "#f59e0b";
+        return "#64748b";
+    }
+    
+    renderGraph() {
+        const svg = document.getElementById('graphSvg');
+        svg.innerHTML = '';
+        
+        if (this.nodes.length === 0) return;
+        
+        const nodePositions = this.generateNodePositions();
+        
+        // Draw edges
+        this.edges.forEach((edge, index) => {
+            const fromPos = nodePositions[edge.from];
+            const toPos = nodePositions[edge.to];
+            
+            if (!fromPos || !toPos) return;
+            
+            const midX = (fromPos.x + toPos.x) / 2;
+            const midY = (fromPos.y + toPos.y) / 2;
+            
+            // Edge line
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', fromPos.x);
+            line.setAttribute('y1', fromPos.y);
+            line.setAttribute('x2', toPos.x);
+            line.setAttribute('y2', toPos.y);
+            line.setAttribute('stroke', this.getEdgeColor(edge.from, edge.to));
+            line.setAttribute('stroke-width', '3');
+            line.setAttribute('opacity', '0.8');
+            svg.appendChild(line);
+            
+            // Weight circle
+            const weightCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            weightCircle.setAttribute('cx', midX);
+            weightCircle.setAttribute('cy', midY);
+            weightCircle.setAttribute('r', '15');
+            weightCircle.setAttribute('fill', 'rgba(15, 15, 35, 0.9)');
+            weightCircle.setAttribute('stroke', this.getEdgeColor(edge.from, edge.to));
+            weightCircle.setAttribute('stroke-width', '2');
+            svg.appendChild(weightCircle);
+            
+            // Weight text
+            const weightText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            weightText.setAttribute('x', midX);
+            weightText.setAttribute('y', midY + 5);
+            weightText.setAttribute('text-anchor', 'middle');
+            weightText.setAttribute('fill', '#ffffff');
+            weightText.setAttribute('font-size', '12');
+            weightText.setAttribute('font-weight', 'bold');
+            weightText.textContent = edge.weight;
+            svg.appendChild(weightText);
+        });
+        
+        // Draw nodes
+        this.nodes.forEach(node => {
+            const pos = nodePositions[node];
+            if (!pos) return;
+            
+            // Node circle
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', pos.x);
+            circle.setAttribute('cy', pos.y);
+            circle.setAttribute('r', '30');
+            circle.setAttribute('fill', this.getNodeColor(node));
+            circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+            circle.setAttribute('stroke-width', '3');
+            circle.style.transition = 'all 0.3s ease';
+            circle.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))';
+            svg.appendChild(circle);
+            
+            // Node label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', pos.x);
+            label.setAttribute('y', pos.y - 45);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('fill', '#ffffff');
+            label.setAttribute('font-size', '16');
+            label.setAttribute('font-weight', 'bold');
+            label.textContent = node;
+            svg.appendChild(label);
+            
+            // Distance text
+            const distanceText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            distanceText.setAttribute('x', pos.x);
+            distanceText.setAttribute('y', pos.y + 6);
+            distanceText.setAttribute('text-anchor', 'middle');
+            distanceText.setAttribute('fill', '#ffffff');
+            distanceText.setAttribute('font-size', '12');
+            distanceText.setAttribute('font-weight', 'bold');
+            
+            const distance = this.distances[node];
+            distanceText.textContent = distance !== undefined ? 
+                (distance === Infinity ? "∞" : distance) : "∞";
+            svg.appendChild(distanceText);
+        });
+    }
+    
+    renderFlowSteps() {
+        const flowStepsContainer = document.getElementById('flowSteps');
+        flowStepsContainer.innerHTML = '';
+        
+        this.flowSteps.slice(0, 5).forEach(step => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = `flow-step ${this.activeFlowSteps.has(step.id) ? 'active' : ''}`;
+            stepDiv.innerHTML = `<strong>${step.id}.</strong> ${step.text}`;
+            flowStepsContainer.appendChild(stepDiv);
+        });
+    }
+    
+    createAdjacencyList() {
+        const graph = {};
+        this.nodes.forEach(node => {
+            graph[node] = [];
+        });
+        
+        this.edges.forEach(edge => {
+            graph[edge.from].push({ node: edge.to, weight: edge.weight });
+            graph[edge.to].push({ node: edge.from, weight: edge.weight });
+        });
+        
+        return graph;
+    }
+    
+    generateDijkstraSteps(source) {
+        const graph = this.createAdjacencyList();
+        const dist = {};
+        const steps = [];
+        const pq = [];
+        const visited = new Set();
+        
+        // Initialize
+        this.nodes.forEach(node => {
+            dist[node] = Infinity;
+        });
+        dist[source] = 0;
+        pq.push([0, source]);
+        
+        steps.push({
+            type: "initialize",
+            distances: { ...dist },
+            current: null,
+            visited: new Set(),
+            priorityQueue: [[0, source]],
+            message: `Initialized all distances. Source ${source} = 0, others = ∞`,
+            flowSteps: new Set([1, 2, 3])
+        });
+        
+        while (pq.length > 0) {
+            pq.sort((a, b) => a[0] - b[0]);
+            const [currentDist, currentNode] = pq.shift();
+            
+            if (visited.has(currentNode)) continue;
+            
+            visited.add(currentNode);
+            
+            steps.push({
+                type: "visit",
+                distances: { ...dist },
+                current: currentNode,
+                visited: new Set(visited),
+                priorityQueue: [...pq],
+                message: `Visiting node ${currentNode} with distance ${currentDist}`,
+                flowSteps: new Set([4, 5, 6])
+            });
+            
+            // Check all neighbors
+            for (const neighbor of graph[currentNode]) {
+                const neighborNode = neighbor.node;
+                const edgeWeight = neighbor.weight;
+                const newDist = dist[currentNode] + edgeWeight;
+                
+                if (newDist < dist[neighborNode]) {
+                    dist[neighborNode] = newDist;
+                    pq.push([newDist, neighborNode]);
+                    
+                    steps.push({
+                        type: "update",
+                        distances: { ...dist },
+                        current: currentNode,
+                        visited: new Set(visited),
+                        priorityQueue: [...pq],
+                        message: `Updated distance to ${neighborNode}: ${newDist} (via ${currentNode})`,
+                        calculation: `${dist[currentNode]} + ${edgeWeight} = ${newDist} < ${dist[neighborNode] === newDist ? 'previous' : dist[neighborNode]}`,
+                        flowSteps: new Set([7, 8])
+                    });
+                }
+            }
+        }
+        
+        steps.push({
+            type: "complete",
+            distances: { ...dist },
+            current: null,
+            visited: new Set(visited),
+            priorityQueue: [],
+            message: "Algorithm complete! All shortest distances found.",
+            flowSteps: new Set([9])
+        });
+        
+        return steps;
+    }
+    
+    startVisualization() {
+        const startNode = document.getElementById('startNode').value;
+        if (!startNode) {
+            alert('Please select a start node');
+            return;
+        }
+        
+        if (this.nodes.length === 0) {
+            alert('Please add some nodes first');
+            return;
+        }
+        
+        this.running = true;
+        this.step = 0;
+        this.algorithm = this.generateDijkstraSteps(startNode);
+        this.visitedNodes.clear();
+        this.currentNode = null;
+        
+        // Initialize distances
+        this.nodes.forEach(node => {
+            this.distances[node] = Infinity;
+        });
+        this.distances[startNode] = 0;
+        
+        // Show/hide controls
+        document.getElementById('startBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'block';
+        document.getElementById('resetBtn').style.display = 'block';
+        
+        // Show algorithm info sections
+        document.getElementById('currentStepInfo').style.display = 'block';
+        document.getElementById('priorityQueue').style.display = 'block';
+        
+        this.renderGraph();
+        this.updateAlgorithmInfo();
+    }
+    
+    nextStep() {
+        if (this.step >= this.algorithm.length) {
+            this.completeVisualization();
+            return;
+        }
+        
+        const currentStep = this.algorithm[this.step];
+        
+        // Update visualization state
+        this.distances = { ...currentStep.distances };
+        this.currentNode = currentStep.current;
+        this.visitedNodes = new Set(currentStep.visited);
+        this.activeFlowSteps = new Set(currentStep.flowSteps);
+        this.priorityQueue = [...currentStep.priorityQueue];
+        
+        // Update displays
+        this.renderGraph();
+        this.renderFlowSteps();
+        this.updateAlgorithmInfo(currentStep);
+        
+        this.step++;
+        document.getElementById('stepCounter').textContent = `(${this.step}/${this.algorithm.length})`;
+        
+        if (this.step >= this.algorithm.length) {
+            document.getElementById('nextBtn').textContent = 'Complete';
+        }
+    }
+    
+    updateAlgorithmInfo(stepData = null) {
+        if (!stepData) return;
+        
+        // Update current step info
+        document.getElementById('currentStepText').textContent = stepData.message;
+        
+        // Update calculation details if available
+        if (stepData.calculation) {
+            document.getElementById('calculationDetails').style.display = 'block';
+            document.getElementById('calculationContent').textContent = stepData.calculation;
+        } else {
+            document.getElementById('calculationDetails').style.display = 'none';
+        }
+        
+        // Update priority queue
+        const queueContent = document.getElementById('priorityQueueContent');
+        queueContent.innerHTML = '';
+        
+        if (this.priorityQueue.length > 0) {
+            this.priorityQueue
+                .sort((a, b) => a[0] - b[0])
+                .forEach(([dist, node]) => {
+                    const queueItem = document.createElement('div');
+                    queueItem.className = 'queue-item';
+                    queueItem.innerHTML = `<span>${node}</span><span>${dist}</span>`;
+                    queueContent.appendChild(queueItem);
+                });
+        } else {
+            queueContent.innerHTML = '<div class="queue-item">Empty</div>';
+        }
+    }
+    
+    completeVisualization() {
+        this.running = false;
+        
+        // Show final results
+        document.getElementById('finalResults').style.display = 'block';
+        const resultsContent = document.getElementById('finalResultsContent');
+        resultsContent.innerHTML = '';
+        
+        Object.entries(this.distances).forEach(([node, distance]) => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+            resultItem.innerHTML = `<span>${node}</span><span>${distance === Infinity ? '∞' : distance}</span>`;
+            resultsContent.appendChild(resultItem);
+        });
+        
+        // Hide next button
+        document.getElementById('nextBtn').style.display = 'none';
+        
+        // Update flow steps to show completion
+        this.activeFlowSteps = new Set([9]);
+        this.renderFlowSteps();
+    }
+    
+    reset() {
+        this.running = false;
+        this.step = 0;
+        this.algorithm = [];
+        this.visitedNodes.clear();
+        this.currentNode = null;
+        this.activeFlowSteps.clear();
+        
+        // Reset distances
+        this.nodes.forEach(node => {
+            this.distances[node] = Infinity;
+        });
+        
+        // Show/hide controls
+        document.getElementById('startBtn').style.display = 'block';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('resetBtn').style.display = 'none';
+        document.getElementById('nextBtn').textContent = 'Next Step';
+        
+        // Hide algorithm info sections
+        document.getElementById('currentStepInfo').style.display = 'none';
+        document.getElementById('calculationDetails').style.display = 'none';
+        document.getElementById('priorityQueue').style.display = 'none';
+        document.getElementById('finalResults').style.display = 'none';
+        
+        this.renderGraph();
+        this.renderFlowSteps();
+    }
+    
+    clearAll() {
+        this.reset();
+        this.nodes = [];
+        this.edges = [];
+        this.distances = {};
+        
+        // Clear all inputs and selects
+        document.getElementById('nodeInput').value = '';
+        document.getElementById('weightInput').value = '';
+        
+        // Clear select options
+        ['fromNode', 'toNode', 'startNode'].forEach(selectId => {
+            const select = document.getElementById(selectId);
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+        });
+        
+        this.renderNodes();
+        this.renderGraph();
     }
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
-    
-    .main-title {
-        font-size: 2rem;
-    }
-    
-    .edge-inputs {
-        grid-template-columns: 1fr;
-    }
-    
-    .legend {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-    
-    .legend-item {
-        flex-direction: row;
-        justify-content: center;
-    }
-}
+// Initialize the visualizer when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new DijkstraVisualizer();
+});
