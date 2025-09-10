@@ -1,186 +1,394 @@
-// Graph data
-let nodes = [];
-let edges = [];
-let steps = [];
-let currentStepIndex = 0;
-
-// DOM elements
-const nodeNameInput = document.getElementById("nodeName");
-const addNodeBtn = document.getElementById("addNodeBtn");
-const nodesList = document.getElementById("nodesList");
-
-const fromNodeSelect = document.getElementById("fromNode");
-const toNodeSelect = document.getElementById("toNode");
-const weightInput = document.getElementById("weight");
-const addEdgeBtn = document.getElementById("addEdgeBtn");
-
-const startNodeSelect = document.getElementById("startNode");
-const startBtn = document.getElementById("startBtn");
-const nextStepBtn = document.getElementById("nextStepBtn");
-const resetBtn = document.getElementById("resetBtn");
-const clearBtn = document.getElementById("clearBtn");
-
-const graphCanvas = document.getElementById("graphCanvas");
-const flowStepsBox = document.getElementById("flowSteps");
-const currentStepBox = document.getElementById("currentStep");
-const pqBox = document.getElementById("priorityQueueBox");
-const finalResultsBox = document.getElementById("finalResults");
-
-// Add node
-addNodeBtn.onclick = () => {
-  const name = nodeNameInput.value.trim();
-  if (name && !nodes.includes(name)) {
-    nodes.push(name);
-    updateUI();
-  }
-  nodeNameInput.value = "";
-};
-
-// Add edge
-addEdgeBtn.onclick = () => {
-  const from = fromNodeSelect.value;
-  const to = toNodeSelect.value;
-  const w = parseInt(weightInput.value);
-  if (from && to && !isNaN(w)) {
-    edges.push({ from, to, weight: w });
-    updateUI();
-  }
-  weightInput.value = "";
-};
-
-// Update UI
-function updateUI() {
-  // Update node chips
-  nodesList.innerHTML = nodes.map(n => `<span>${n}</span>`).join("");
-
-  // Update selects
-  [fromNodeSelect, toNodeSelect, startNodeSelect].forEach(sel => {
-    sel.innerHTML = `<option value="">${sel.id === "startNode" ? "Select start node" : sel.id === "fromNode" ? "From" : "To"}</option>` +
-      nodes.map(n => `<option value="${n}">${n}</option>`).join("");
-  });
-
-  drawGraph();
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-// Draw graph (basic circle layout)
-function drawGraph() {
-  graphCanvas.innerHTML = "";
-  const cx = 200, cy = 200, r = 120;
-  const positions = {};
-  nodes.forEach((n, i) => {
-    const angle = 2 * Math.PI * i / nodes.length;
-    positions[n] = { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
-  });
-
-  // Draw edges
-  edges.forEach(e => {
-    const p1 = positions[e.from], p2 = positions[e.to];
-    if (!p1 || !p2) return;
-    graphCanvas.innerHTML += `
-      <line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="#64748b" stroke-width="2"/>
-      <text x="${(p1.x+p2.x)/2}" y="${(p1.y+p2.y)/2}" fill="black" font-size="12" text-anchor="middle">${e.weight}</text>
-    `;
-  });
-
-  // Draw nodes
-  nodes.forEach(n => {
-    const p = positions[n];
-    graphCanvas.innerHTML += `
-      <circle cx="${p.x}" cy="${p.y}" r="20" fill="#6366f1" stroke="white" stroke-width="2"/>
-      <text x="${p.x}" y="${p.y+4}" fill="white" font-size="14" text-anchor="middle">${n}</text>
-    `;
-  });
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);
+    min-height: 100vh;
+    color: #ffffff;
+    overflow-x: auto;
 }
 
-// Clear all
-clearBtn.onclick = () => {
-  nodes = [];
-  edges = [];
-  steps = [];
-  updateUI();
-  flowStepsBox.innerHTML = "";
-  currentStepBox.innerHTML = "";
-  pqBox.innerHTML = "";
-  finalResultsBox.innerHTML = "";
-};
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-// Reset algorithm
-resetBtn.onclick = () => {
-  currentStepIndex = 0;
-  steps = [];
-  nextStepBtn.disabled = true;
-  currentStepBox.innerHTML = "";
-  pqBox.innerHTML = "";
-  finalResultsBox.innerHTML = "";
-  drawGraph();
-};
+.main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, #8b5cf6, #06b6d4, #10b981);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient 3s ease infinite;
+    text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+}
 
-// Run algorithm
-startBtn.onclick = () => {
-  const source = startNodeSelect.value;
-  if (!source) return;
-  steps = runDijkstra(source);
-  currentStepIndex = 0;
-  showStep(steps[0]);
-  nextStepBtn.disabled = false;
-};
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
-// Next step
-nextStepBtn.onclick = () => {
-  if (currentStepIndex < steps.length - 1) {
-    currentStepIndex++;
-    showStep(steps[currentStepIndex]);
-  } else {
-    nextStepBtn.disabled = true;
-  }
-};
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
 
-// Dijkstra algorithm
-function runDijkstra(source) {
-  const graph = {};
-  nodes.forEach(n => graph[n] = []);
-  edges.forEach(e => {
-    graph[e.from].push({ node: e.to, weight: e.weight });
-    graph[e.to].push({ node: e.from, weight: e.weight });
-  });
+.panel {
+    background: rgba(15, 15, 35, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
 
-  const dist = {};
-  nodes.forEach(n => dist[n] = Infinity);
-  dist[source] = 0;
+.panel:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(139, 92, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
 
-  const pq = [[0, source]];
-  const visited = new Set();
-  const steps = [];
+.panel-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #8b5cf6;
+    text-align: center;
+}
 
-  steps.push({ msg: `Start from ${source}`, dist: { ...dist }, pq: [...pq] });
+.section {
+    margin-bottom: 1.5rem;
+}
 
-  while (pq.length) {
-    pq.sort((a, b) => a[0] - b[0]);
-    const [d, u] = pq.shift();
-    if (visited.has(u)) continue;
-    visited.add(u);
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #e2e8f0;
+}
 
-    steps.push({ msg: `Visiting ${u}`, dist: { ...dist }, pq: [...pq] });
+.section-title.small {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
 
-    for (let { node: v, weight } of graph[u]) {
-      if (!visited.has(v) && d + weight < dist[v]) {
-        dist[v] = d + weight;
-        pq.push([dist[v], v]);
-        steps.push({ msg: `Update ${v} = ${dist[v]} via ${u}`, dist: { ...dist }, pq: [...pq] });
-      }
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.input-field, .select-field {
+    flex: 1;
+    padding: 0.75rem;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus, .select-field:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    background: rgba(30, 30, 60, 0.8);
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.select-field option {
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+.edge-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.btn {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb, #1e3a8a);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    width: 100%;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.btn-purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    width: 100%;
+}
+
+.btn-purple:hover {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #64748b, #475569);
+    color: white;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #475569, #334155);
+    box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nodes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.node-tag {
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.visualization-panel {
+    min-height: 500px;
+}
+
+.svg-container {
+    background: rgba(30, 30, 60, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    margin-bottom: 1rem;
+}
+
+.legend {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    text-align: center;
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.legend-color.unvisited {
+    background: #6366f1;
+}
+
+.legend-color.current {
+    background: #f59e0b;
+}
+
+.legend-color.visited {
+    background: #10b981;
+}
+
+.legend span {
+    font-size: 0.8rem;
+    color: #e2e8f0;
+}
+
+.flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.flow-step {
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.flow-step.active {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.flow-step:not(.active) {
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+}
+
+.calculation-details, .current-step-info, .priority-queue, .final-results {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid;
+}
+
+.calculation-details {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.current-step-info {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.priority-queue {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.final-results {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.calculation-content, .priority-queue-content, .final-results-content {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.queue-item, .result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    margin: 0.25rem 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
-  }
-
-  steps.push({ msg: "Algorithm complete", dist: { ...dist }, pq: [] });
-  return steps;
+    
+    .main-title {
+        font-size: 2.5rem;
+    }
 }
 
-// Show step
-function showStep(step) {
-  currentStepBox.innerHTML = step.msg;
-  pqBox.innerHTML = "<b>Priority Queue:</b><br>" + step.pq.map(([d, n]) => `${n}(${d})`).join(", ");
-  if (step.msg.includes("complete")) {
-    finalResultsBox.innerHTML = "<b>Final Distances:</b><br>" +
-      Object.entries(step.dist).map(([n, d]) => `${n}: ${d}`).join("<br>");
-  }
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .edge-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    .legend {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .legend-item {
+        flex-direction: row;
+        justify-content: center;
+    }
 }
